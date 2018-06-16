@@ -32,6 +32,9 @@ public class User {
     @Column
     private String email;
 
+    @Column
+    private String password;
+
     /**
      * The movies the user has created
      */
@@ -98,5 +101,13 @@ public class User {
 
     public void setVotes(List<Vote> votes) {
         this.votes = votes;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
