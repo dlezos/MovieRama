@@ -38,6 +38,10 @@ public class RepositoryTest {
 
     @Before
     public void setUp() throws Exception {
+        // Clear the database
+        voteRepository.deleteAll();
+        movieRepository.deleteAll();
+        userRepository.deleteAll();
         // Register a UserDto Creator
         User creator = new User();
         creator.setUsername("CreatorUser");
