@@ -4,11 +4,15 @@ import gr.lezos.movierama.model.Movie;
 import gr.lezos.movierama.model.User;
 import gr.lezos.movierama.model.Vote;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
@@ -21,7 +25,8 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
  * Test the Repositories
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@DataJpaTest
+@Rollback
 public class RepositoryTest {
 
     @Autowired
@@ -33,7 +38,7 @@ public class RepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        // Register a User Creator
+        // Register a UserDto Creator
         User creator = new User();
         creator.setUsername("CreatorUser");
         userRepository.save(creator);
@@ -52,7 +57,7 @@ public class RepositoryTest {
         movieC.setOwner(creator);
         movieC.setTitle("MovieC");
         movieRepository.save(movieC);
-        // Register a User VoterOne
+        // Register a UserDto VoterOne
         User voterOne = new User();
         voterOne.setUsername("voterOne");
         userRepository.save(voterOne);
@@ -68,7 +73,7 @@ public class RepositoryTest {
         voteOneB.setMovie(movieB);
         voteOneB.setUser(voterOne);
         voteRepository.save(voteOneB);
-        // Register a User VoterTwo
+        // Register a UserDto VoterTwo
         User voterTwo = new User();
         voterTwo.setUsername("voterTwo");
         userRepository.save(voterTwo);
@@ -92,7 +97,7 @@ public class RepositoryTest {
 
     @Test
     public void findAllAndSortByLike() {
-        List<Object[]> result = movieRepository.findAllAndSortByLikes(new Sort(ASC, "likes", "title"));
+        List<Object[]> result = movieRepository.findAllWithLikes(new Sort(ASC, "likes", "title"));
         assertNotNull(result);
         assertEquals(3, result.size());
         assertEquals("MovieC", ((Movie)result.get(0)[0]).getTitle());

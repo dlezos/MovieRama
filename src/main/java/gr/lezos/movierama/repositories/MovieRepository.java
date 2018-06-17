@@ -16,7 +16,7 @@ public interface MovieRepository  extends JpaRepository<Movie, Long> {
 
     /**
      * This is a query with possibly great complexity, the "likes" and "hates" values could either:
-     * a. Be moved to the Movie entity and be updates as Vote are INSERTED or UPDATED
+     * a. Be moved to the MovieDto entity and be updates as Vote are INSERTED or UPDATED
      * b. Be moved as a subselect
      * c. Be counted and sorted in memory by Java code
      */
@@ -25,5 +25,5 @@ public interface MovieRepository  extends JpaRepository<Movie, Long> {
             "       LEFT OUTER JOIN Vote l on l.movie = m AND l.opinion = TRUE" +
             "       LEFT OUTER JOIN Vote h on h.movie = m AND h.opinion = FALSE" +
             " GROUP BY m.id")
-    List<Object[]> findAllAndSortByLikes(Sort sort);
+    List<Object[]> findAllWithLikes(Sort sort);
 }

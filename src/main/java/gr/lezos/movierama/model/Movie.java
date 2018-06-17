@@ -8,13 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * The Movie database entity
+ * The MovieDto database entity
  */
 @Entity
 @Table(name = "movies")

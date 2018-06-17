@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import java.util.List;
 
 /**
- * The User database entity
+ * The UserDto database entity
  */
 @Entity
 @Table(name = "users")

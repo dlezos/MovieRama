@@ -11,35 +11,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * Web controller for movie page
+ * Web controller for register user page
  */
 @Controller
-public class MovieController extends CommonController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MovieController.class);
+public class RegisterController extends CommonController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
 
     /**
-     * Handles the register movie page request
+     * Handles the register page request
      * @param model
      * @return The login page
      */
-    @RequestMapping("/movie")
-    public String movie(Model model) {
-        return "movie";
+    @RequestMapping("/register")
+    public String register(Model model) {
+        return "register";
     }
 
     /**
-     * Handles the submit movie action
+     * Handles the login action
      * @param username The username
      * @param password The password
      * @param model The model
-     * @return The login page in failure, The index page in success
+     * @return The register page in failure, The index page in success
      */
-    @PostMapping("/movie")
-    public String movie(
+    @PostMapping("/register")
+    public String register(
             @RequestParam("username") String username,
             @RequestParam("password") String password,
             Model model) {
         Boolean success = true;
-        return success ? "index" : "login";
+        return success ? "index" : "register";
     }
+
 }
