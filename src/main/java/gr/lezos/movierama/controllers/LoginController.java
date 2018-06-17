@@ -49,18 +49,17 @@ public class LoginController extends CommonController {
             HttpSession session,
             Model model) {
         // Check for required parameters and a not already Logged in user
-        if (!username.isEmpty() && !password.isEmpty() && session.getAttribute("username") == null) {
+        if (!username.isEmpty() && !password.isEmpty() && session.getAttribute("user") == null) {
             UserDto userDto = movieRamaService.validateUser(username, password);
             if (userDto != null) {
-                session.setAttribute("username", userDto.getUsername());
+                session.setAttribute("user", userDto);
+                session.removeAttribute("fromRegistration");
                 model.addAttribute("user", userDto);
-                List<MovieDto> movieDtos = movieRamaService.getMovies(new Sort(ASC, "title"), userDto.getId(), null);
-                model.addAttribute("movies", movieDtos);
-                return "index";
+                return gotoIndex("title", userDto.getId(), null, session, model);
             }
         }
         // Login failed, return to the login page
-        model.addAttribute("error", model.containsAttribute("username") ? "error-already-logged-in" : "error-login-failed");
+        model.addAttribute("error", model.containsAttribute("user") ? "error-already-logged-in" : "error-login-failed");
         return "login";
     }
 
@@ -70,7 +69,7 @@ public class LoginController extends CommonController {
      */
     @PostMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("username");
+        session.removeAttribute("user");
         return "index";
     }
 

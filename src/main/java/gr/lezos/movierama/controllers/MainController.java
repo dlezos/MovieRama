@@ -29,19 +29,19 @@ public class MainController extends CommonController {
         return gotoIndex(sort.orElse(null), userId.orElse(null), ownerId.orElse(null), session, model);
     }
 
-    @PostMapping("/like")
+    @RequestMapping("/like")
     public String like(@RequestParam("movieId") Long movieId, @RequestParam("userId") Long userId, HttpSession session, Model model) {
         movieRamaService.vote(movieId, userId, Boolean.TRUE);
         return gotoIndex(null, userId, null, session, model);
     }
 
-    @PostMapping("/hate")
+    @RequestMapping("/hate")
     public String hate(@RequestParam Long movieId, @RequestParam("userId") Long userId, HttpSession session, Model model) {
         movieRamaService.vote(movieId, userId, Boolean.FALSE);
         return gotoIndex(null, userId, null, session, model);
     }
 
-    @PostMapping("/unset")
+    @RequestMapping("/unset")
     public String unset(@RequestParam Long movieId, @RequestParam("userId") Long userId, HttpSession session, Model model) {
         movieRamaService.vote(movieId, userId, null);
         return gotoIndex(null, userId, null, session, model);

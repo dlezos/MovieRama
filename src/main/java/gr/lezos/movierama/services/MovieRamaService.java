@@ -11,11 +11,13 @@ import gr.lezos.movierama.repositories.VoteRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,7 +76,8 @@ public class MovieRamaService {
         // Remove any existing vote for this movie by this user
         Vote vote = voteRepository.findByMovieAndUser(movie, user);
         if (vote != null) {
-            voteRepository.delete(vote);
+            user.getVotes().remove(vote);
+            userRepository.save(user);
         }
         // Add a vote with the new opinion
         if (opinion != null) {
@@ -93,10 +96,11 @@ public class MovieRamaService {
                 movie.getTitle(),
                 movie.getDescription(),
                 fromUser(movie.getOwner()),
-                movie.getPublicationDate() != null ? Duration.between(LocalDateTime.now(), movie.getPublicationDate()).toDays() : 0,
+                movie.getPublicationDate() != null ? Math.abs(Duration.between(movie.getPublicationDate(), LocalDateTime.now()).toDays()) : 0,
                 (Long)array[1],
                 (Long)array[2],
-                movie.getVotes().stream().filter(v -> v.getUser().getId() == userId).findAny().orElse(new Vote()).getOpinion()
+                movie.getVotes().stream().filter(v -> v.getUser().getId() == userId).findAny().orElse(new Vote()).getOpinion(),
+                userId
         );
     }
 
@@ -106,14 +110,47 @@ public class MovieRamaService {
                 movie.getTitle(),
                 movie.getDescription(),
                 fromUser(movie.getOwner()),
-                movie.getPublicationDate() != null ? Duration.between(LocalDateTime.now(), movie.getPublicationDate()).toDays() : 0,
-                movie.getVotes().stream().filter(v -> v.getOpinion() == Boolean.TRUE).count(),
-                movie.getVotes().stream().filter(v -> v.getOpinion() == Boolean.FALSE).count(),
-                movie.getVotes().stream().filter(v -> v.getUser().getId() == userId).findAny().orElse(new Vote()).getOpinion()
+                movie.getPublicationDate() != null ? Math.abs(Duration.between(movie.getPublicationDate(), LocalDateTime.now()).toDays()) : 0,
+                movie.getVotes() != null ? movie.getVotes().stream().filter(v -> v.getOpinion() == Boolean.TRUE).count() : 0,
+                movie.getVotes() != null ? movie.getVotes().stream().filter(v -> v.getOpinion() == Boolean.FALSE).count() : 0,
+                movie.getVotes() != null ? movie.getVotes().stream().filter(v -> v.getUser().getId() == userId).findAny().orElse(new Vote()).getOpinion() : null,
+                userId
         );
     }
 
     private static final UserDto fromUser(User user) {
         return new UserDto(user.getId(), user.getUsername(), user.getName(), user.getSurname());
+    }
+
+    public UserDto registerUser(String username, String password, String name, String surname, String email) {
+        // Get a user with the provided username
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return null;
+        }
+        user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setPassword(password);
+        userRepository.save(user);
+        return fromUser(user);
+    }
+
+    public boolean addMovie(String title, String description, Long userId) {
+        // Get the user
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return false;
+        }
+        // Add the Movie
+        Movie movie = new Movie();
+        movie.setOwner(user);
+        movie.setTitle(title);
+        movie.setDescription(description);
+        movie.setPublicationDate(LocalDateTime.now());
+        movieRepository.save(movie);
+        return true;
     }
 }

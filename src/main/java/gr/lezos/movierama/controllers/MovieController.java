@@ -1,5 +1,6 @@
 package gr.lezos.movierama.controllers;
 
+import gr.lezos.movierama.dto.UserDto;
 import gr.lezos.movierama.services.MovieRamaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Web controller for movie page
@@ -36,10 +39,25 @@ public class MovieController extends CommonController {
      */
     @PostMapping("/movie")
     public String movie(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            HttpSession session,
             Model model) {
-        Boolean success = true;
-        return success ? "index" : "login";
+        if (title == null) {
+            // Registration failed, return to the movie page
+            model.addAttribute("error", "title-required");
+            return "movie";
+        }
+        if (description == null) {
+            // Registration failed, return to the movie page
+            model.addAttribute("error", "description-required");
+            return "movie";
+        }
+        if (!movieRamaService.addMovie(title, description, ((UserDto)session.getAttribute("user")).getId())) {
+            // Registration failed, return to the movie page
+            model.addAttribute("error", "creation-failed");
+            return "movie";
+        }
+        return gotoIndex(null, ((UserDto)session.getAttribute("user")).getId(), ((UserDto)session.getAttribute("user")).getId(), session, model);
     }
 }

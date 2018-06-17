@@ -1,5 +1,6 @@
 package gr.lezos.movierama.controllers;
 
+import gr.lezos.movierama.dto.UserDto;
 import gr.lezos.movierama.services.MovieRamaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Web controller for register user page
@@ -38,9 +41,31 @@ public class RegisterController extends CommonController {
     public String register(
             @RequestParam("username") String username,
             @RequestParam("password") String password,
+            @RequestParam("name") String name,
+            @RequestParam("surname") String surname,
+            @RequestParam("email") String email,
+            HttpSession session,
             Model model) {
-        Boolean success = true;
-        return success ? "index" : "register";
+        if (username == null) {
+            // Registration failed, return to the register page
+            model.addAttribute("error", "username-required");
+            return "register";
+        }
+        if (password == null) {
+            // Registration failed, return to the register page
+            model.addAttribute("error", "password-required");
+            return "register";
+        }
+        UserDto userDto = movieRamaService.registerUser(username, password, name, surname, email);
+        if (userDto == null) {
+            // Registration failed, return to the register page
+            model.addAttribute("error", "username-exists");
+            return "register";
+        }
+        session.setAttribute("user", userDto);
+        session.setAttribute("fromRegistration", true);
+        model.addAttribute("user", userDto);
+        return gotoIndex("title", userDto.getId(), null, session, model);
     }
 
 }

@@ -4,6 +4,23 @@
     <title>Movie Rama</title>
 </head>
 <body>
-<a href="/">Movie Rama</a>h1>Movie</h1>
+<table width="800">
+    <tr>
+        <td align="left"><h1>MovieRama</h1></td>
+        <td align="right" th:if="${session.user == null}">
+            <a href="/login">Log in</a> or <a href="/register">Sign up</a>
+        </td>
+        <td align="right" th:if="${session.user != null}">
+            <span th:text="${session.fromRegistration == null} ? 'Welcome Back ' : 'Welcome '"></span><a href="/"><span th:text="${session.user.name} + ' ' + ${session.user.surname}"></span></a>
+        </td>
+    </tr>
+</table>
+<h2 th:text="${error}"></h2>
+<form method="post">
+    <label for="title">Title:</label><input id="title" name="title" type="text"><br>
+    <label for="description">Description:</label><input id="description" name="description"type="text"><br>
+    <button type="submit">Create</button>
+</form>
+
 </body>
 </html>

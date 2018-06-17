@@ -8,13 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
 public class CommonController {
@@ -25,6 +24,7 @@ public class CommonController {
 
     protected final String gotoIndex(String sort, Long userId, Long ownerId, HttpSession session, Model model) {
         List<MovieDto> movieDtos = movieRamaService.getMovies(new Sort(ASC, sort != null ? sort : "title"), userId, ownerId);
+        model.addAttribute("ownerId", ownerId);
         model.addAttribute("movies", movieDtos);
         return "index";
     }

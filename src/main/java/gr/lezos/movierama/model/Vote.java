@@ -36,7 +36,7 @@ public class Vote {
     /**
      * The user that submitted the vote
      */
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User user;
 
     public Long getId() {
