@@ -75,15 +75,19 @@ public class MovieRamaService {
         }
         // Remove any existing vote for this movie by this user
         Vote vote = voteRepository.findByMovieAndUser(movie, user);
-        if (vote != null) {
+        if (vote != null && opinion == null) {
             user.getVotes().remove(vote);
             userRepository.save(user);
+            movie.getVotes().remove(vote);
         }
-        // Add a vote with the new opinion
         if (opinion != null) {
-            vote = new Vote();
-            vote.setMovie(movie);
-            vote.setUser(user);
+            // Add a vote with the new opinion
+            if (vote == null) {
+                vote = new Vote();
+                vote.setMovie(movie);
+                vote.setUser(user);
+                user.getVotes().add(vote);
+            }
             vote.setOpinion(opinion);
             voteRepository.save(vote);
         }
@@ -99,7 +103,7 @@ public class MovieRamaService {
                 movie.getPublicationDate() != null ? Math.abs(Duration.between(movie.getPublicationDate(), LocalDateTime.now()).toDays()) : 0,
                 (Long)array[1],
                 (Long)array[2],
-                movie.getVotes().stream().filter(v -> v.getUser().getId() == userId).findAny().orElse(new Vote()).getOpinion(),
+                movie.getVotes().stream().filter(v -> v.getUser().getId().equals(userId)).findAny().orElse(new Vote()).getOpinion(),
                 userId
         );
     }
@@ -113,7 +117,7 @@ public class MovieRamaService {
                 movie.getPublicationDate() != null ? Math.abs(Duration.between(movie.getPublicationDate(), LocalDateTime.now()).toDays()) : 0,
                 movie.getVotes() != null ? movie.getVotes().stream().filter(v -> v.getOpinion() == Boolean.TRUE).count() : 0,
                 movie.getVotes() != null ? movie.getVotes().stream().filter(v -> v.getOpinion() == Boolean.FALSE).count() : 0,
-                movie.getVotes() != null ? movie.getVotes().stream().filter(v -> v.getUser().getId() == userId).findAny().orElse(new Vote()).getOpinion() : null,
+                movie.getVotes() != null ? movie.getVotes().stream().filter(v -> v.getUser().getId().equals(userId)).findAny().orElse(new Vote()).getOpinion() : null,
                 userId
         );
     }

@@ -1,6 +1,7 @@
 package gr.lezos.movierama.controllers;
 
 import gr.lezos.movierama.dto.MovieDto;
+import gr.lezos.movierama.dto.UserDto;
 import gr.lezos.movierama.services.MovieRamaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,10 @@ public class CommonController {
     MovieRamaService movieRamaService;
 
     protected final String gotoIndex(String sort, Long userId, Long ownerId, HttpSession session, Model model) {
-        List<MovieDto> movieDtos = movieRamaService.getMovies(new Sort(ASC, sort != null ? sort : "title"), userId, ownerId);
+        List<MovieDto> movieDtos = movieRamaService.getMovies(
+                new Sort(ASC, sort != null ? sort : "title"),
+                userId == null && session.getAttribute("user") != null ? ((UserDto)session.getAttribute("user")).getId() : userId,
+                ownerId);
         model.addAttribute("ownerId", ownerId);
         model.addAttribute("movies", movieDtos);
         return "index";
