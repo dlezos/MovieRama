@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Movie Rama</title>
+</head>
+<body>
+<table width="800">
+    <tr>
+        <td align="left"><h1>MovieRama</h1></td>
+        <td align="right" th:if="${session.user == null}">
+            <a href="/login">Log in</a> or <a href="/register">Sign up</a>
+        </td>
+        <td align="right" th:if="${session.user != null}">
+            <span th:text="${session.fromRegistration == null} ? 'Welcome Back ' : 'Welcome '"></span><a th:href="'/?ownerId=' + ${session.user.id}"><span th:text="${session.user.name} + ' ' + ${session.user.surname}"></span></a>
+        </td>
+    </tr>
+</table>
+<table width="600" bgcolor="#a9a9a9" border="0">
+    <tr>
+        <td width="100" align="right">Sort by:</td>
+        <td align="left">
+            <a href="/?sort=likes">Likes</a> | <a href="/?sort=hates">Hates</a> | <a href="/?sort=publicationDate">Date</a>
+        </td>
+        <td th:text="${model}"></td>
+        <td align="right" th:if="${param.ownerId != null || ownerId != null}">
+            <a href="/">Show all movies</a>
+        </td>
+    </tr>
+</table>
+<table width="600" border="0">
+    <tr valign="top">
+        <td>
+            <table width="500" border="2">
+                <tr th:each="movie,rowStat : ${movies}">
+                    <td>
+                        <div th:border="2">
+                            <h1 th:text="${movie.title}">movie.title</h1><br>
+                            <h3>Posted by <a th:href="'/?ownerId=' + ${movie.owner.id}" th:text="${movie.owner.name} + ' ' + ${movie.owner.surname}"></a> </span> <span th:if="${movie.created == 0}">today</span><span th:if="${movie.created != 0}" th:text="${movie.created} + ' days ago'"></span></h3>
+                            <div th:text="${movie.description}"></div>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a th:if="${movie.canLike == true}" th:href="'/like?movieId=' + ${movie.id} + '&userId=' + ${session.user.id}" th:text="${movie.likes} + (${movie.likes == 1} ? ' like' : ' likes')">movie.likes</a>
+                                        <span th:if="${movie.canLike == false}" th:text="${movie.likes} + (${movie.likes == 1} ? ' like' : ' likes')">movie.likes</span>
+                                        &nbsp;|&nbsp;
+                                        <a th:if="${movie.canHate == true}" th:href="'/hate?movieId=' + ${movie.id} + '&userId=' + ${session.user.id}" th:text="${movie.hates} + (${movie.hates == 1} ? ' hate' : ' hates')">movie.hates</a>
+                                        <span th:if="${movie.canHate == false}"  th:text="${movie.hates} + (${movie.hates == 1} ? ' hate' : ' hates')">movie.hates</span>
+                                    </td>
+                                    <td align="right" th:if="${movie.opinion == true}">
+                                        <div>You like this movie <a th:href="'/unset?movieId=' + ${movie.id} + '&userId=' + ${session.user.id}">Unlike</a></div>
+                                    </td>
+                                    <td align="right" th:if="${movie.opinion == false}">
+                                        <div>You hate this movie <a th:href="'/unset?movieId=' + ${movie.id} + '&userId=' + ${session.user.id}">Unhate</a></div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td>
+            <table width="100">
+                <tr valign="top">
+                    <td>
+                        <h3 th:if="${session.user != null}"><a href="/movie">New Movie</a></h3>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

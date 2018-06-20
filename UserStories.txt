@@ -1,0 +1,12 @@
+UC-1: As a User I should be able to Sign Up for a new Account
+UC-2: As a User I should be able to Login to my Account and then also Logout
+UC-3: As a User I should be able to see the site while not Signed up
+UC-4: As a User I should be able to add a Movie
+UC-5: As a User I should be able to see the movieDtos I have added when I visit the site again
+UC-6: As a User I should be able to see the movieDtos submitted in the site
+UC-6.1: As a User I should be able to sort the list of movieDtos by:
+	- The number of likes
+	- The number of hates
+	- The date added
+UC-7: As a User I should be able to like or hate or ignore a movie, except my own ones and I should be able to change my opinion. I am allowed only one vote for each movie
+UC-8: As a User I should be able to view all movis submitted by a userDto
