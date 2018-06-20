@@ -9,6 +9,8 @@
         <td align="left"><h1>MovieRama</h1></td>
         <td align="right" th:if="${session.user == null}">
             <a href="/login">Log in</a> or <a href="/register">Sign up</a>
+            <br>
+            Use <b>guest/guest</b> if you are in a hurry!
         </td>
         <td align="right" th:if="${session.user != null}">
             <span th:text="${session.fromRegistration == null} ? 'Welcome Back ' : 'Welcome '"></span><a th:href="'/?ownerId=' + ${session.user.id}"><span th:text="${session.user.name} + ' ' + ${session.user.surname}"></span></a>
