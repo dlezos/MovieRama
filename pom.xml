@@ -5,7 +5,7 @@
 
 	<groupId>gr.lezos</groupId>
 	<artifactId>movierama</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>movierama</name>
@@ -37,12 +37,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-    <dependency>
-        <groupId>org.springframework.webflow</groupId>
-        <artifactId>spring-webflow</artifactId>
-        <version>2.5.0.RELEASE</version>
-    </dependency>
-
+		<dependency>
+			<groupId>org.springframework.webflow</groupId>
+			<artifactId>spring-webflow</artifactId>
+			<version>2.5.0.RELEASE</version>
+		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

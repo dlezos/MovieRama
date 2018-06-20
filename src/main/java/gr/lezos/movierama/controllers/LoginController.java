@@ -67,7 +67,7 @@ public class LoginController extends CommonController {
      * Handles the logout action
      * @return The index page
      */
-    @PostMapping("/logout")
+    @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute("user");
         return "index";
