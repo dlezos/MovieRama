@@ -25,7 +25,7 @@ public class CommonController {
 
     protected final String gotoIndex(String sort, Long userId, Long ownerId, HttpSession session, Model model) {
         List<MovieDto> movieDtos = movieRamaService.getMovies(
-                new Sort(ASC, sort != null ? sort : "title"),
+                new Sort("date".equals(sort) ? DESC : ASC, sort != null ? sort : "title"),
                 userId == null && session.getAttribute("user") != null ? ((UserDto)session.getAttribute("user")).getId() : userId,
                 ownerId);
         model.addAttribute("ownerId", ownerId);
